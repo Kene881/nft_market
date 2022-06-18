@@ -1,10 +1,15 @@
-const Card = artifacts.require("Card"); 
+const { assert } = require("console");
 
-contract("Card" , () => { 
-    it("Card Testing" , async () => { 
-       const card = await Card.deployed() ; 
-       await card.setName("User Name") ; 
-       const result = await card.name() ; 
-       assert(result === "User Name") ;
+const CardList = artifacts.require("CardList"); 
+
+contract("CardList" , () => { 
+    it("CardList Testing" , async () => { 
+       const cardList = await CardList.deployed() ;
+       await cardList.createCard('First', 2000, 'alskdjfl;askjdf', 'alsdkjfl;askjdf');
+       const {name, price, imageHash, ipfsInfo} = await cardList.getCardById(0);
+       assert(name == "First");
+       assert(price == 2000);
+       assert(imageHash == 'alskdjfl;askjdf');
+       assert(ipfsInfo == 'alsdkjfl;askjdf');
     }); 
 });

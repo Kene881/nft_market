@@ -1,6 +1,6 @@
-const Card = artifacts.require("Card"); 
+const CardList = artifacts.require("CardList"); 
 
 module.exports = function (deployer) {
-  deployer.deploy(Card); 
+  deployer.deploy(CardList); 
 }; 
  

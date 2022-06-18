@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -7,8 +8,8 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ContractLinking extends ChangeNotifier {
-  final String _rpcUrl = "http://10.0.2.2:7545";
-  final String _wsUrl = "ws://10.0.2.2:7545/";
+  final String _rpcUrl = "http://10.0.0.1:7545";
+  final String _wsUrl = "ws://10.0.0.1:7545/";
   final String _privateKey = "b1825ce58d51781617e2cf86bd745852ab8e1f324d808c50027df972e55154fe";
 
   Web3Client? _client;
@@ -19,13 +20,18 @@ class ContractLinking extends ChangeNotifier {
   Credentials? _credentials;
 
   DeployedContract? _contract;
-  ContractFunction? _price;
-  ContractFunction? _setPrice;
-  ContractFunction? _name;
-  ContractFunction? _setName;
+  ContractFunction? _createCard;
+  ContractFunction? _getCardById;
 
-  String? deployedName;
-  String? deployedPrice;
+  Card? deployedCard;
+
+  // ContractFunction? _price;
+  // ContractFunction? _setPrice;
+  // ContractFunction? _name;
+  // ContractFunction? _setName;
+
+  // String? deployedName;
+  // String? deployedPrice;
 
   ContractLinking() {
     initialSetup();
@@ -54,39 +60,37 @@ class ContractLinking extends ChangeNotifier {
   } 
 
   Future<void> getDeployedContract() async { 
-    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "Card"), _contractAddress); 
-    _price = _contract?.function("price");
-    _setPrice = _contract?.function("setPrice");
-    _name = _contract?.function("name"); 
-    _setName = _contract?.function("setName"); 
-    getName();
+    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "CardList"), _contractAddress);
+    _createCard =_contract?.function("createCard");
+    _getCardById = _contract?.function("getCardById");
   } 
 
-  getName() async { 
-    var currentName = await _client?.call(contract: _contract, function: _name, params: []); 
-    deployedName = currentName?[0];
+  getCard(int id) async { 
+    var currentCardValues = await _client?.call(contract: _contract, function: _getCardById, params: [id]); 
+    deployedCard = Card(currentCardValues?[0], currentCardValues?[1], currentCardValues?[2], currentCardValues?[3]);
     isLoading = false; 
     notifyListeners(); 
   }
 
-  setName(String nameToSet) async { 
+  createCard(String name, int price, String imageHash, String ipfs) async { 
     isLoading = true; 
     notifyListeners(); 
-    await _client?.sendTransaction(_credentials, Transaction.callContract(contract: _contract, function: _setName, parameters: [nameToSet])); 
-    getName();
+    await _client?.sendTransaction(_credentials, Transaction.callContract(contract: _contract, function: _createCard, parameters: [name, price, imageHash, ipfs])); 
   }
+}
 
-  getPrice() async {
-    var currentPrice = await _client?.call(contract: _contract, function: _price, params: []);
-    deployedPrice = currentPrice?[0];
-    isLoading = false;
-    notifyListeners();
-  }
 
-  setPrice(int priceToSet) async {
-    isLoading = true;
-    notifyListeners();
-    await _client?.sendTransaction(_credentials, Transaction.callContract(contract: _contract, function: _setPrice, parameters: [priceToSet]));
-    getPrice();
+class Card {
+  String? imageHash;
+  String? ipfsInfo;
+
+  String? name;
+  int? price;
+
+  Card(String name, int price, String imageHash, String ipfsInfo) {
+    this.imageHash = imageHash;
+    this.ipfsInfo = ipfsInfo;
+    this.name = name;
+    this.price = price;
   }
 }
