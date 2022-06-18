@@ -34,6 +34,10 @@ dependencies:
   flutter_svg: ^1.0.3
   unicons: ^2.1.0
   flutter_colorpicker: ^1.0.3
+  provider: ^4.3.3
+  web3dart: ^1.2.3
+  http: ^0.12.2
+  web_socket_channel: ^1.2.0
 
 
 dev_dependencies:
@@ -54,7 +58,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
-  #   - images/a_dot_ham.jpeg
+    - src/artifacts/Card.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
