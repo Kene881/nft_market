@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:nftapp/animations/fade_animation.dart';
 import 'package:nftapp/animations/slide_animation.dart';
 import 'package:nftapp/constants.dart';
@@ -181,12 +180,12 @@ class _AppBar extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        const Icon(
-          Iconsax.heart5,
-          color: Colors.red,
-        ),
+        // const Icon(
+        //   Iconsax.heart5,
+        //   color: Colors.red,
+        // ),
         SizedBox(width: 16.h),
-        const Icon(Iconsax.menu_1),
+        //const Icon(Iconsax.menu_1),
       ],
     );
   }
