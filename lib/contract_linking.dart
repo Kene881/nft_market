@@ -60,13 +60,13 @@ class ContractLinking extends ChangeNotifier {
   } 
 
   Future<void> getDeployedContract() async { 
-    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "CardList"), _contractAddress);
+    _contract = DeployedContract(ContractAbi.fromJson(_abiCode!, "CardList"), _contractAddress!);
     _createCard =_contract?.function("createCard");
     _getCardById = _contract?.function("getCardById");
   } 
 
   getCard(int id) async { 
-    var currentCardValues = await _client?.call(contract: _contract, function: _getCardById, params: [id]); 
+    var currentCardValues = await _client?.call(contract: _contract!, function: _getCardById!, params: [id]); 
     deployedCard = Card(currentCardValues?[0], currentCardValues?[1], currentCardValues?[2], currentCardValues?[3]);
     isLoading = false; 
     notifyListeners(); 
@@ -75,7 +75,7 @@ class ContractLinking extends ChangeNotifier {
   createCard(String name, int price, String imageHash, String ipfs) async { 
     isLoading = true; 
     notifyListeners(); 
-    await _client?.sendTransaction(_credentials, Transaction.callContract(contract: _contract, function: _createCard, parameters: [name, price, imageHash, ipfs])); 
+    await _client?.sendTransaction(_credentials!, Transaction.callContract(contract: _contract!, function: _createCard!, parameters: [name, price, imageHash, ipfs])); 
   }
 }
 
