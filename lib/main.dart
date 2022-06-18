@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nftapp/screens/auth_screen.dart';
 import 'package:nftapp/screens/onboarding_screen.dart';
 
 void main() {
