@@ -3,15 +3,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:nftapp/screens/home_screen.dart';
+import 'package:nftapp/screens/main_screen.dart';
+import 'package:unicons/unicons.dart';
 
 class DrawingArea {
   Offset point;
   Paint areaPaint;
 
-  DrawingArea({required this.point,required this.areaPaint});
+  DrawingArea({required this.point, required this.areaPaint});
 }
 
 class EditorScreen extends StatefulWidget {
+  static const routeName = "/editor-screen";
   const EditorScreen({Key? key}) : super(key: key);
 
   @override
@@ -38,31 +42,41 @@ class _EditorScreenState extends State<EditorScreen> {
     void selectColor() {
       showDialog(
         context: context,
-        builder: (BuildContext context) { 
+        builder: (BuildContext context) {
           return AlertDialog(
-          title: const Text('Color Chooser'),
-          content: SingleChildScrollView(
-            child: BlockPicker(
-              pickerColor: selectedColor,
-              onColorChanged: (color) {
-                setState(() {
-                  selectedColor = color;
-                });
-              },
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+            title: const Text('Color Chooser'),
+            content: SingleChildScrollView(
+              child: BlockPicker(
+                pickerColor: selectedColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    selectedColor = color;
+                  });
                 },
-                child: const Text("Close"))
-          ],
-        ); },
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Close"))
+            ],
+          );
+        },
       );
     }
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(UniconsLine.backward),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+          },
+        ),
+        title: const Text("Editor"),
+      ),
       body: Stack(
         children: <Widget>[
           Container(
@@ -90,7 +104,8 @@ class _EditorScreenState extends State<EditorScreen> {
                       width: width * 0.80,
                       height: height * 0.80,
                       decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20.0)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.4),
@@ -128,7 +143,8 @@ class _EditorScreenState extends State<EditorScreen> {
                         },
                         child: SizedBox.expand(
                           child: ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20.0)),
                             child: CustomPaint(
                               painter: MyCustomPainter(points: points),
                             ),
@@ -141,7 +157,8 @@ class _EditorScreenState extends State<EditorScreen> {
                 Container(
                   width: width * 0.80,
                   decoration: const BoxDecoration(
-                      color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
                   child: Row(
                     children: <Widget>[
                       IconButton(
@@ -152,7 +169,6 @@ class _EditorScreenState extends State<EditorScreen> {
                           onPressed: () {
                             selectColor();
                           }),
-
                       Expanded(
                         child: Slider(
                           min: 1.0,
@@ -167,14 +183,13 @@ class _EditorScreenState extends State<EditorScreen> {
                           },
                         ),
                       ),
-
                       IconButton(
                           icon: const Icon(
                             Icons.layers_clear,
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            setState((){
+                            setState(() {
                               points.clear();
                             });
                           }),
@@ -204,9 +219,11 @@ class MyCustomPainter extends CustomPainter {
 
     for (int x = 0; x < points.length - 1; x++) {
       if (points[x] != null && points[x + 1] != null) {
-        canvas.drawLine(points[x].point, points[x + 1].point, points[x].areaPaint);
+        canvas.drawLine(
+            points[x].point, points[x + 1].point, points[x].areaPaint);
       } else if (points[x] != null && points[x + 1] == null) {
-        canvas.drawPoints(PointMode.points, [points[x].point], points[x].areaPaint);
+        canvas.drawPoints(
+            PointMode.points, [points[x].point], points[x].areaPaint);
       }
     }
   }
