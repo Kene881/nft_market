@@ -96,7 +96,7 @@ class _CardItemNFTState extends State<CardItemNFTNFT>
             ),
           ),
           expanded: Container(
-            padding: EdgeInsets.symmetric(horizontal: 7.5),
+            padding: const EdgeInsets.symmetric(horizontal: 7.5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.black, width: 5),

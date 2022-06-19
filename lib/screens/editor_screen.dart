@@ -1,5 +1,5 @@
 // ignore_for_file: deprecated_member_use
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -29,7 +29,7 @@ class EditorScreen extends StatefulWidget {
       final boundary = previewContainer.currentContext!.findRenderObject()
           as RenderRepaintBoundary;
       final image = await boundary.toImage();
-      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final pngBytes = byteData!.buffer.asUint8List();
       final saved = await ImageGallerySaver.saveImage(
         pngBytes,
@@ -114,36 +114,35 @@ class _EditorScreenState extends State<EditorScreen> {
                   Color.fromARGB(255, 3, 168, 251),
                 ])),
           ),
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: width * 0.8,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const <Widget>[
-                        Text(
-                          "Here you can create your cards!",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+          RepaintBoundary(
+            key: EditorScreen.previewContainer,
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: width * 0.8,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Text(
+                            "Here you can create your cards!",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InteractiveViewer(
-                    minScale: 0.1,
-                    maxScale: 0.1,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Container(
                       width: width * 0.80,
                       height: height * 0.75,
@@ -191,69 +190,66 @@ class _EditorScreenState extends State<EditorScreen> {
                           child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20.0)),
-                            child: RepaintBoundary(
-                              key: EditorScreen.previewContainer,
-                              child: CustomPaint(
-                                painter: MyCustomPainter(points: points),
-                              ),
+                            child: CustomPaint(
+                              painter: MyCustomPainter(points: points),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: width * 0.80,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                          icon: Icon(
-                            Icons.color_lens,
-                            color: selectedColor,
+                  Container(
+                    width: width * 0.80,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                              Icons.color_lens,
+                              color: selectedColor,
+                            ),
+                            onPressed: () {
+                              selectColor();
+                            }),
+                        Expanded(
+                          child: Slider(
+                            min: 1.0,
+                            max: 5.0,
+                            label: "Stroke $strokeWidth",
+                            activeColor: selectedColor,
+                            value: strokeWidth,
+                            onChanged: (double value) {
+                              setState(() {
+                                strokeWidth = value;
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            selectColor();
-                          }),
-                      Expanded(
-                        child: Slider(
-                          min: 1.0,
-                          max: 5.0,
-                          label: "Stroke $strokeWidth",
-                          activeColor: selectedColor,
-                          value: strokeWidth,
-                          onChanged: (double value) {
-                            setState(() {
-                              strokeWidth = value;
-                            });
-                          },
                         ),
-                      ),
-                      IconButton(
-                          icon: const Icon(
-                            Icons.layers_clear,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              points.clear();
-                            });
-                          }),
-                      IconButton(
-                          icon: const Icon(
-                            Icons.save,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            widget.save();
-                          }),
-                    ],
-                  ),
-                )
-              ],
+                        IconButton(
+                            icon: const Icon(
+                              Icons.layers_clear,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                points.clear();
+                              });
+                            }),
+                        IconButton(
+                            icon: const Icon(
+                              Icons.save,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              widget.save();
+                            }),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -280,7 +276,7 @@ class MyCustomPainter extends CustomPainter {
             points[x]!.point, points[x + 1]!.point, points[x]!.areaPaint);
       } else if (points[x] != null && points[x + 1] == null) {
         canvas.drawPoints(
-            PointMode.points, [points[x]!.point], points[x]!.areaPaint);
+            ui.PointMode.points, [points[x]!.point], points[x]!.areaPaint);
       }
     }
   }
