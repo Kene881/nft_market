@@ -11,9 +11,11 @@ import 'api_contacts.dart';
 
 void main() {
   ApiService service = new ApiService();
-  var file = File('assets/images/HotBig.png');
+  var file = File('assets/images/user.jpeg');
 
-  service.setImage(file);
+  // var res = service.setImage(file);
+
+  // res.then(((value) => debugPrint(value)));
   // var res = service.getImages();
   // res.then(((value) {
   //   for (var item in value!) {
