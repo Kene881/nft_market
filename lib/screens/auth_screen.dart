@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nftapp/screens/home_screen.dart';
 
 class AuthorizationScreen extends StatefulWidget {
-  AuthorizationScreen({Key? key}) : super(key: key);
+  const AuthorizationScreen({Key? key}) : super(key: key);
 
   @override
   State<AuthorizationScreen> createState() => _AuthorizationScreenState();
 }
 
 class _AuthorizationScreenState extends State<AuthorizationScreen> {
-  TextEditingController _emailController = TextEditingController(); 
-  TextEditingController _passwordController = TextEditingController(); 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   String? _email;
   String? _password;
@@ -22,45 +23,47 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
       body: Column(
         children: [
           _logo(),
-          (_showLogin == true) ?
-              Column(
-                children: [
-                  _form('LOGIN', _action),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: GestureDetector(
-                      child: Text(
-                        'Not registered yet? Register',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+          (_showLogin == true)
+              ? Column(
+                  children: [
+                    _form('LOGIN', _action),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: GestureDetector(
+                        child: const Text(
+                          'Not registered yet? Register',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _showLogin = false;
+                          });
+                        },
                       ),
-                      onTap: () {
-                        setState(() {
-                          _showLogin = false;
-                        });
-                      },
-                    ),
-                  )
-                ],
-              ) :
-              Column(
-                children: [
-                  _form('REGISTER', _action),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: GestureDetector(
-                      child: Text(
-                        'Already registered? Login',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                    )
+                  ],
+                )
+              : Column(
+                  children: [
+                    _form('REGISTER', _action),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: GestureDetector(
+                        child: const Text(
+                          'Already registered? Login',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                        onTap: () {
+                          setState(
+                            () {
+                              _showLogin = true;
+                            },
+                          );
+                        },
                       ),
-                      onTap: () {
-                        setState(() {
-                          _showLogin = true;
-                        });
-                      },
-                    ),
-                  )
-                ],
-              )
+                    )
+                  ],
+                )
           // _form('LOGIN', _action),
         ],
       ),
@@ -69,12 +72,14 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
   Widget _logo() {
     return Padding(
-      padding: EdgeInsets.only(top: 100),
+      padding: const EdgeInsets.only(top: 100),
+      // ignore: avoid_unnecessary_containers
       child: Container(
-        child: Align(
+        child: const Align(
           child: Text(
             'NFT MARKET',
-            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+                fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
       ),
@@ -91,15 +96,22 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 20),
-            child: _input(Icon(Icons.lock), 'password', _passwordController, true),
+            child:
+                _input(Icon(Icons.lock), 'password', _passwordController, true),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20,),
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            // ignore: sized_box_for_whitespace
             child: Container(
               height: 50,
               width: MediaQuery.of(context).size.width,
-              child: _button(label, func), 
+              child: _button(label, func),
             ),
           )
         ],
@@ -107,30 +119,34 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
     );
   }
 
-  Widget _input(Icon icon, String hint, TextEditingController controller, bool isHide) {
+  Widget _input(
+      Icon icon, String hint, TextEditingController controller, bool isHide) {
     return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: TextField(
         controller: controller,
         obscureText: isHide,
         style: const TextStyle(fontSize: 20, color: Colors.white),
         decoration: InputDecoration(
-          hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white30),
-          hintText: hint,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 3)
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white54, width: 1)
-          ),
-          prefixIcon: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10,),
-            child: IconTheme(
-              data: IconThemeData(color: Colors.white),
-              child: icon,
-            ),
-          )
-        ),
+            hintStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.white30),
+            hintText: hint,
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 3)),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white54, width: 1)),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              child: IconTheme(
+                data: const IconThemeData(color: Colors.white),
+                child: icon,
+              ),
+            )),
       ),
     );
   }
@@ -139,10 +155,14 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
     return ElevatedButton(
       child: Text(
         label,
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20,),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontSize: 20,
+        ),
       ),
       onPressed: () {
-        func();
+        Navigator.popAndPushNamed(context, HomeScreen.routeName);
       },
     );
   }
