@@ -1,11 +1,15 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nftapp/screens/home_screen.dart';
 import 'package:nftapp/screens/main_screen.dart';
 import 'package:unicons/unicons.dart';
+import 'package:nftapp/api_contacts.dart';
+import 'package:flutter/services.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class DrawingArea {
   Offset point;
@@ -18,12 +22,32 @@ class EditorScreen extends StatefulWidget {
   static const routeName = "/editor-screen";
   const EditorScreen({Key? key}) : super(key: key);
 
+  static GlobalKey previewContainer = new GlobalKey();
+
+  Future<void> save() async {
+    try {
+      final boundary = previewContainer.currentContext!.findRenderObject()
+          as RenderRepaintBoundary;
+      final image = await boundary.toImage();
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData!.buffer.asUint8List();
+      final saved = await ImageGallerySaver.saveImage(
+        pngBytes,
+        quality: 100,
+        name: DateTime.now().toIso8601String() + ".png",
+        isReturnImagePathOfIOS: true,
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   _EditorScreenState createState() => _EditorScreenState();
 }
 
 class _EditorScreenState extends State<EditorScreen> {
-  List<DrawingArea> points = [];
+  List<DrawingArea?> points = [];
   Color selectedColor = Colors.black;
   double strokeWidth = 1;
 
@@ -157,16 +181,21 @@ class _EditorScreenState extends State<EditorScreen> {
                           });
                         },
                         onPanEnd: (details) {
-                          setState(() {
-                            //points.add(null);
-                          });
+                          setState(
+                            () {
+                              points.add(null);
+                            },
+                          );
                         },
                         child: SizedBox.expand(
                           child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20.0)),
-                            child: CustomPaint(
-                              painter: MyCustomPainter(points: points),
+                            child: RepaintBoundary(
+                              key: EditorScreen.previewContainer,
+                              child: CustomPaint(
+                                painter: MyCustomPainter(points: points),
+                              ),
                             ),
                           ),
                         ),
@@ -219,7 +248,7 @@ class _EditorScreenState extends State<EditorScreen> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            setState(() {});
+                            widget.save();
                           }),
                     ],
                   ),
@@ -234,7 +263,7 @@ class _EditorScreenState extends State<EditorScreen> {
 }
 
 class MyCustomPainter extends CustomPainter {
-  List<DrawingArea> points;
+  List<DrawingArea?> points;
 
   MyCustomPainter({required this.points});
 
@@ -248,10 +277,10 @@ class MyCustomPainter extends CustomPainter {
     for (int x = 0; x < points.length - 1; x++) {
       if (points[x] != null && points[x + 1] != null) {
         canvas.drawLine(
-            points[x].point, points[x + 1].point, points[x].areaPaint);
+            points[x]!.point, points[x + 1]!.point, points[x]!.areaPaint);
       } else if (points[x] != null && points[x + 1] == null) {
         canvas.drawPoints(
-            PointMode.points, [points[x].point], points[x].areaPaint);
+            PointMode.points, [points[x]!.point], points[x]!.areaPaint);
       }
     }
   }
