@@ -4,10 +4,11 @@ contract CardList{
     uint public cardsCount;
 
     struct Card {
-        string imageHash;
-        string ipfsInfo;
-
-        string name;
+        string imageUrl;
+        string title;
+        uint manaCost;
+        uint damage;
+        uint health;
         uint price;
     }
 
@@ -17,44 +18,18 @@ contract CardList{
 
     mapping(uint => Card) public cards;
 
-    function createCard(string memory name, uint price, string memory imageHash, string memory ipfs) public {
+    function createCard(string memory title, uint price, string memory imageUrl, uint manaCost, uint damage, uint health) public {
         cards[cardsCount++] = Card(
-            imageHash, 
-            ipfs,
-            name,
+            imageUrl,
+            title,
+            manaCost,
+            damage,
+            health,
             price
         );
     }
 
-    function getCardById(uint id) public view returns (string memory name, uint price, string memory imageHash, string memory ipfs)  {
-        return (cards[id].name, cards[id].price, cards[id].imageHash, cards[id].ipfsInfo);
+    function getCardById(uint id) public view returns (string memory title, uint price, string memory imageUrl, uint manaCost, uint damage, uint health)  {
+        return (cards[id].title, cards[id].price, cards[id].imageUrl, cards[id].manaCost, cards[id].damage, cards[id].health);
     }
 }
-
-// contract Card {
-//     mapping(address => Image[]) private image;
-//     string public name;
-//     uint public price;
-
-//     constructor() public {
-//         name = "default";
-//         price = 0;
-//     }
-
-//     struct Image {
-//         string imageHash;
-//         string ipfsInfo;
-//     }
- 
-//     function uploadImage(string memory imageHash, string memory ipfs) public{
-//        image[msg.sender].push(Image(imageHash, ipfs));
-//     }
-
-//     function setName(string memory nm) public {
-//         name = nm;
-//     }
-
-//     function setPrice(uint pr) public {
-//         price = pr;
-//     }
-// }

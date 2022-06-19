@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:nftapp/providers/card_model.dart';
 import 'package:web3dart/contracts.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
@@ -23,7 +24,7 @@ class ContractLinking extends ChangeNotifier {
   ContractFunction? _createCard;
   ContractFunction? _getCardById;
 
-  Card? deployedCard;
+  CardPl? deployedCard;
 
   // ContractFunction? _price;
   // ContractFunction? _setPrice;
@@ -60,37 +61,28 @@ class ContractLinking extends ChangeNotifier {
   } 
 
   Future<void> getDeployedContract() async { 
-    _contract = DeployedContract(ContractAbi.fromJson(_abiCode, "CardList"), _contractAddress);
+    _contract = DeployedContract(ContractAbi.fromJson(_abiCode!, "CardList"), _contractAddress!);
     _createCard =_contract?.function("createCard");
     _getCardById = _contract?.function("getCardById");
   } 
 
   getCard(int id) async { 
-    var currentCardValues = await _client?.call(contract: _contract, function: _getCardById, params: [id]); 
-    deployedCard = Card(currentCardValues?[0], currentCardValues?[1], currentCardValues?[2], currentCardValues?[3]);
+    var currentCardValues = await _client?.call(contract: _contract!, function: _getCardById!, params: [id]); 
+    deployedCard = CardPl(
+      id: id.toString(), 
+      title: currentCardValues![0], 
+      image: currentCardValues[2], 
+      manaCost: currentCardValues[3], 
+      damage: currentCardValues[4], 
+      health: currentCardValues[5]
+    );
     isLoading = false; 
     notifyListeners(); 
   }
 
-  createCard(String name, int price, String imageHash, String ipfs) async { 
-    isLoading = true; 
-    notifyListeners(); 
-    await _client?.sendTransaction(_credentials, Transaction.callContract(contract: _contract, function: _createCard, parameters: [name, price, imageHash, ipfs])); 
-  }
-}
-
-
-class Card {
-  String? imageHash;
-  String? ipfsInfo;
-
-  String? name;
-  int? price;
-
-  Card(String name, int price, String imageHash, String ipfsInfo) {
-    this.imageHash = imageHash;
-    this.ipfsInfo = ipfsInfo;
-    this.name = name;
-    this.price = price;
+  createCard(String name, int price, String imageUrl, int manaCost, int damage, int health) async { 
+    isLoading = true;
+    notifyListeners();
+    await _client?.sendTransaction(_credentials!, Transaction.callContract(contract: _contract!, function: _createCard!, parameters: [name, price, imageUrl, manaCost, damage, health])); 
   }
 }
