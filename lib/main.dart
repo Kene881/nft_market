@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nftapp/screens/auth_screen.dart';
@@ -9,14 +11,17 @@ import 'api_contacts.dart';
 
 void main() {
   ApiService service = new ApiService();
-  var res = service.getImages();
-  res.then(((value) {
-    for (var item in value!) {
-      var id = item.id;
-      var url = item.url;
-      debugPrint("$id = $url");
-    }
-  }));
+  var file = File('assets/images/HotBig.png');
+
+  service.setImage(file);
+  // var res = service.getImages();
+  // res.then(((value) {
+  //   for (var item in value!) {
+  //     var id = item.id;
+  //     var url = item.url;
+  //     debugPrint("$id = $url");
+  //   }
+  // }));
   // Future<ImageServer?> res = service.getImage(1);
   // res.then(((value) {
   //   debugPrint(value?.url);
