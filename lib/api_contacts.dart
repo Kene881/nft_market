@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import 'package:path/path.dart';
 import 'package:async/async.dart';
@@ -54,16 +56,15 @@ class ApiService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.imagesEndPoint);
       var request = http.MultipartRequest("POST", url);
 
-      var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-      // get file length
-      var length = await imageFile.length();
-
-      var multipartFile = new http.MultipartFile('file', stream, length,
-          filename: basename(imageFile.path));
-
-      request.files.add(multipartFile);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+        )
+      );
 
       var response = await request.send();
+      debugPrint(response.statusCode.toString());
     } catch (e) {
       log(e.toString());
     }
