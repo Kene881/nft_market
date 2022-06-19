@@ -6,7 +6,6 @@ import 'package:nftapp/animations/page_transition.dart';
 import 'package:nftapp/constants.dart';
 import 'editor_screen.dart';
 import '../animations/slide_animation.dart';
-import 'nft_screen.dart';
 import "main_screen.dart";
 import 'package:expandable/expandable.dart';
 
@@ -101,6 +100,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             ],
+          ),
+          GestureDetector(
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: const CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 23,
+                child: CircleAvatar(
+                  radius: 20,
+                  child: Icon(UniconsLine.setting),
+                ),
+              ),
+            ),
+            onTap: () {},
           ),
           GestureDetector(
             child: Container(

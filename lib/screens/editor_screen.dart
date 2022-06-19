@@ -85,9 +85,9 @@ class _EditorScreenState extends State<EditorScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                  Color.fromRGBO(138, 35, 135, 1.0),
-                  Color.fromRGBO(233, 64, 87, 1.0),
-                  Color.fromRGBO(242, 113, 33, 1.0),
+                  Color.fromARGB(255, 48, 16, 145),
+                  Color.fromARGB(255, 0, 34, 255),
+                  Color.fromARGB(255, 3, 168, 251),
                 ])),
           ),
           Center(
@@ -95,6 +95,26 @@ class _EditorScreenState extends State<EditorScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: width * 0.8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Text(
+                          "Here you can create your cards!",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InteractiveViewer(
@@ -102,7 +122,7 @@ class _EditorScreenState extends State<EditorScreen> {
                     maxScale: 0.1,
                     child: Container(
                       width: width * 0.80,
-                      height: height * 0.80,
+                      height: height * 0.75,
                       decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20.0)),
@@ -192,6 +212,14 @@ class _EditorScreenState extends State<EditorScreen> {
                             setState(() {
                               points.clear();
                             });
+                          }),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() {});
                           }),
                     ],
                   ),

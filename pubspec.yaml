@@ -35,6 +35,8 @@ dependencies:
   unicons: ^2.1.0
   flutter_colorpicker: ^1.0.3
   expandable: ^5.0.1
+  web3dart: ^2.3.5
+  web_socket_channel: ^2.2.0
 
 
 dev_dependencies:
