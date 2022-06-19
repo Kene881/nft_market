@@ -51,10 +51,11 @@ class ApiService {
     }
   }
 
-  Future<void> setImage(File imageFile) async {
+  Future<String?> setImage(File imageFile) async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.imagesEndPoint);
       var request = http.MultipartRequest("POST", url);
+      String urlImg = 'nothing';
 
       request.files.add(
         await http.MultipartFile.fromPath(
@@ -63,8 +64,14 @@ class ApiService {
         )
       );
 
-      var response = await request.send();
-      debugPrint(response.statusCode.toString());
+      urlImg = await request.send().then((response) {
+        var res = response.stream.bytesToString();
+        return res.then((value) {
+          var jsonDecoded = jsonDecode(value);
+          return jsonDecoded['image'];
+        });
+      });
+      return urlImg;
     } catch (e) {
       log(e.toString());
     }
